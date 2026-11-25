@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScamShield — Crypto Scam Detector</title>
+<meta name="description" content="Paste a crypto message, link or token address and get a risk verdict with the reasons spelled out. Built for SLAY HACKS 2026.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 24 24" width="30" height="30" aria-hidden="true">
+        <path fill="currentColor" d="M12 1.8 4.5 5.2v6.1c0 4.9 3.2 8.4 7.5 10.9 4.3-2.5 7.5-6 7.5-10.9V5.2L12 1.8zm-1.2 13.9-3.2-3.2 1.4-1.4 1.8 1.8 4.1-4.1 1.4 1.4-5.5 5.5z"/>
+      </svg>
+      <span class="brand-name">ScamShield</span>
+    </div>
+    <span class="hack-badge">SLAY HACKS 2026</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>Check before you send.</h1>
+    <p class="hero-sub">Paste a crypto message, a link, or a token address. ScamShield scans it for the red flags scammers rely on — doubling giveaways, seed-phrase traps, lookalike domains, rug-pull tokens — and tells you exactly why it is risky.</p>
+    <p class="hero-note">Analysis runs entirely in your browser. Nothing you paste is uploaded — except an optional public lookup of a token address on DexScreener.</p>
+  </section>
+
+  <section class="analyzer card" id="analyzer">
+    <label class="input-label" for="input">Paste a message, link, or token address</label>
+    <textarea id="input" rows="4" placeholder="e.g. “Send 0.5 ETH and get 1 ETH back! Elon Musk giveaway ends soon!” — or a link like binance-secure-login.com — or a token address"></textarea>
+    <div class="analyzer-actions">
+      <button id="analyzeBtn" class="btn btn-primary">Analyze</button>
+      <button id="clearBtn" class="btn btn-ghost">Clear</button>
+      <span id="livePill" class="live-pill" title="Live token data comes from the public DexScreener API (no key needed). If it is unreachable, the analysis still runs on local checks alone.">Live data: <strong id="liveStatus">not checked yet</strong></span>
+    </div>
+    <div class="samples">
+      <span class="samples-label">Try one:</span>
+      <button class="chip" data-sample="scam">Elon “giveaway” DM</button>
+      <button class="chip" data-sample="link">Fake Binance link</button>
+      <button class="chip" data-sample="legit">Legit market chat</button>
+    </div>
+  </section>
+
+  <section id="results" class="results" hidden>
+    <div class="card verdict-card">
+      <div class="verdict-row">
+        <div>
+          <div class="verdict-label">Verdict</div>
+          <div id="verdictBadge" class="verdict-badge">—</div>
+          <div id="inputType" class="input-type"></div>
+        </div>
+        <div class="score-block">
+          <div class="score-number"><span id="scoreNum">0</span><span class="score-max">/100</span></div>
+          <div class="score-caption">risk score</div>
+        </div>
+      </div>
+      <div class="meter" aria-hidden="true">
+        <div class="meter-fill" id="meterFill" style="width:0%"></div>
+        <div class="meter-marker" id="meterMarker" style="left:0%"></div>
+      </div>
+      <div class="meter-scale"><span>0 · Safe</span><span>25</span><span>50</span><span>75</span><span>100 · Scam</span></div>
+    </div>
+
+    <div class="card">
+      <h2>What was found</h2>
+      <p id="flagsEmpty" class="muted" hidden>No red flags matched. See the notes below.</p>
+      <div id="flagGroups"></div>
+      <div id="notesList" class="notes"></div>
+    </div>
+
+    <div class="card next-steps">
+      <h2>What to do next</h2>
+      <ul id="nextSteps"></ul>
+      <button id="copyBtn" class="btn btn-ghost">Copy report</button>
+      <span id="copyMsg" class="copy-msg" hidden>Copied.</span>
+    </div>
+  </section>
+
+  <section class="how card">
+    <h2>How it works</h2>
+    <ol class="steps">
+      <li><strong>Paste anything suspicious</strong> — a DM, a tweet, a Telegram post, a link, or a token address.</li>
+      <li><strong>ScamShield scans it</strong> against 20+ known scam patterns: doubling promises, guaranteed returns, seed-phrase traps, impersonation, urgency tricks, lookalike domains, shorteners, raw-IP links, and token liquidity checks.</li>
+      <li><strong>You get a verdict with reasons</strong> — every flag carries a plain-English explanation and a weight, so the score is transparent, not a black box.</li>
+    </ol>
+    <p class="muted small">The engine is deterministic: the same input always gives the same score. It is a pattern-and-heuristics engine, not a live language model — the README explains how an LLM layer would plug in.</p>
+  </section>
+
+  <section class="redflags">
+    <h2>Red flags to know</h2>
+    <div class="flag-grid">
+      <div class="flag-card"><strong>Double-your-money giveaways</strong><span>“Send 0.5 ETH, get 1 ETH back.” No real giveaway asks you to send funds first.</span></div>
+      <div class="flag-card"><strong>Seed phrase requests</strong><span>Anyone asking for your seed phrase or private key is stealing your wallet. Full stop.</span></div>
+      <div class="flag-card"><strong>Lookalike domains</strong><span>binance-secure-login.com is not binance.com. One letter is all it takes.</span></div>
+      <div class="flag-card"><strong>Fake airdrops</strong><span>Real airdrops never ask you to connect to a random site or send funds to “claim”.</span></div>
+      <div class="flag-card"><strong>Guaranteed returns</strong><span>“500% APY, risk-free” is a promise no honest project can make.</span></div>
+      <div class="flag-card"><strong>Urgency pressure</strong><span>“Act in 1 hour or lose everything” exists to stop you thinking.</span></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built for <strong>SLAY HACKS 2026</strong> — a solo entry by Temz. ScamShield is an educational prototype, not financial advice. Always verify through official channels before sending funds.</p>
+  </div>
+</footer>
+
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
